@@ -36,12 +36,21 @@ public class CheckAvailabilityResponse extends RequestResponse {
 
 	@Override
 	public void FromJSON(String _response) {
-		@SuppressWarnings("unused")
 		JSONObject obj = null;
 		try {
 			obj = (JSONObject) parser.parse(_response);
+			boolean b = obj.get("busy").toString().toLowerCase().equals("true") ? true : false;
+			setBusy(b); 
 		} catch (org.json.simple.parser.ParseException e) {
 			System.err.println("CheckAvailabilityResponse: Message is not valid");
 		}
+	}
+	
+	public boolean getBusy(){
+		return this.busy;
+	}
+	
+	public void setBusy(boolean busy){
+		this.busy = busy;
 	}
 }

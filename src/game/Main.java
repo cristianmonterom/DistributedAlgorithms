@@ -29,10 +29,9 @@ public class Main {
 	 * @param args
 	 */
 	public static void main(String[] args) {
-		String currentImage = "";
 		Socket socket = new Socket();
 
-		System.out.println(new BagOfItems(3).ToJSON());
+//		System.out.println(new BagOfItems(3).ToJSON());
 		/**
 		 * parsing arguments
 		 */
@@ -49,11 +48,13 @@ public class Main {
 		} else {
 			ServerConnection connAsServer = new ServerConnection(
 					getServerPort());
-			connAsServer.establishConnection();
-			ServerThread sThread = new ServerThread(connAsServer.socket);
-			sThread.setDebug(debug);
-			Thread serverThread = new Thread(sThread);
-			serverThread.start();
+			while (true){
+				connAsServer.establishConnection();
+				ServerThread sThread = new ServerThread(connAsServer.socket);
+				sThread.setDebug(debug);
+				Thread serverThread = new Thread(sThread);
+				serverThread.start();
+			}
 		}
 
 		/**
@@ -164,9 +165,9 @@ public class Main {
 		local = !hostname.equals("") ? false : true;
 
 		System.out.println("Parameters:");
-		System.out.println("hostname=" + hostname);
-		System.out.println("serverPort=" + serverPort);
-		System.out.println("clientport=" + clientPort);
+		System.out.print("hostname=" + hostname);
+		System.out.print(" serverPort=" + serverPort);
+		System.out.print(" clientport=" + clientPort + "\n");
 	}
 
 	public static int getServerPort() {

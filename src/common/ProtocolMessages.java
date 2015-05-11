@@ -4,7 +4,7 @@ public enum ProtocolMessages {
 	Status("status"), StartGame("startgame"), StartingGame(
 			"startinggame"), StopGame("stopgame"), StoppedGame(
 			"stoppedgame"), SelectedItems("selecteditems"), 
-			StoredItems("storeditems"), results("results"),
+			StoredItems("storeditems"), Results("results"),
 			Request("request"), Response("response"),
 			Play("play"), TakenServer("takenserver"),
 			CheckAvailability("checkavailability")

@@ -6,10 +6,19 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.PrintWriter;
+import java.net.InetAddress;
 import java.net.Socket;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
+
+import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
+
+import common.Item;
+import common.ItemType;
 import common.ProtocolMessages;
 import messaging.*;
 
@@ -29,9 +38,11 @@ public class ClientThread implements Runnable {
 	private OutputStream outputStream;
 	private InputStream inputStream;
 	private Socket socketRef;
-	private int numPlayers;
+	private int numPlayers = 5;
 	
 	private boolean debug = false;
+	private boolean busyServer = false;
+	private String token;
 
 	public ClientThread(Socket socket) {
 		socketRef = socket;
@@ -51,38 +62,76 @@ public class ClientThread implements Runnable {
 		try {
 			sendCheckAvailabilityRequest();
 		} catch (IOException e1) {
-			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
 		
 		receiveCheckAvailabilityResponse();
-		
-		try {
-			sendStartGameRequest();
-		} catch (IOException e) {
-			e.printStackTrace();
+
+		if (!this.busyServer){
+			try {
+				sendStartGameRequest();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+			receiveStartGameResponse();
+
+			try {
+				sendPlayRequest();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+
+			receivePlayResponse();
+			
+			receiveResultsResponse();
+//			sendStopgameRequest();
+//
+//			receiveStopGameResponse();
 		}
-		receiveStartGameResponse();
+		
 
-//		do {
-//			receiveBag();
-//		} while (keyboardCapture.isRunning());
 
-		sendStopgameRequest();
-
-		receiveStopGameResponse();
-
-//		out.close();
-//		try {
-//			in.close();
+		out.close();
+		try {
+			in.close();
 //			socketRef.close();
-//		} catch (IOException ex) {
-//			ex.printStackTrace();
-//		}
+		} catch (IOException ex) {
+			ex.printStackTrace();
+		}
 
 		System.exit(-1);
 	}
 	
+	private void receivePlayResponse() {
+		String strFromServer = null;
+		PlayResponse playResponse;
+		try {
+			strFromServer = in.readLine();
+		} catch (IOException ioEx) {
+			ioEx.printStackTrace();
+		}
+
+		playResponse = new PlayResponse();
+		playResponse.FromJSON(strFromServer);
+		
+		printDebugLines(playResponse.ToJSON());
+	}
+
+	private void receiveResultsResponse() {
+		String strFromServer = null;
+		ResultsResponse resultsResponse;
+		try {
+			strFromServer = in.readLine();
+		} catch (IOException ioEx) {
+			ioEx.printStackTrace();
+		}
+
+		resultsResponse = new ResultsResponse();
+		resultsResponse.FromJSON(strFromServer);
+		
+		printDebugLines(resultsResponse.ToJSON());
+	}
+
 	private void sendCheckAvailabilityRequest() throws IOException {
 		CheckAvailabilityRequest request = new CheckAvailabilityRequest();
 		out.println(request.ToJSON());
@@ -100,6 +149,7 @@ public class ClientThread implements Runnable {
 
 		checkAvailabilityResponse = new CheckAvailabilityResponse();
 		checkAvailabilityResponse.FromJSON(strFromServer);
+		this.busyServer = checkAvailabilityResponse.getBusy();
 		
 		printDebugLines(checkAvailabilityResponse.ToJSON());
 	}
@@ -115,7 +165,7 @@ public class ClientThread implements Runnable {
 
 		startGameResponse = new StartGameResponse();
 		startGameResponse.FromJSON(strFromServer);
-		
+		this.token = startGameResponse.getToken();
 		printDebugLines(startGameResponse.ToJSON());
 	}
 
@@ -125,6 +175,13 @@ public class ClientThread implements Runnable {
 		printDebugLines(request.ToJSON());
 	}
 
+	private void sendPlayRequest() throws IOException {
+		PlayRequest request = new PlayRequest(this.token, InetAddress.getLocalHost().toString());
+		request.setItems(someItems());
+		out.println(request.ToJSON());
+		printDebugLines(request.ToJSON());
+	}
+	
 	private void sendStopgameRequest() {
 		StopGameRequest stopGameReq = new StopGameRequest();
 		String str = stopGameReq.ToJSON();
@@ -158,22 +215,22 @@ public class ClientThread implements Runnable {
 
 	private void receiveBag() {
 		String streamStr = readMessage();
-		Play streamMsgFromServer;
+//		Play streamMsgFromServer;
 
 		try {
-			streamMsgFromServer = new Play();
-			streamMsgFromServer.FromJSON(streamStr);
-
-			if (streamMsgFromServer.isCorrectMessage()) {
-				out.println("received message " + streamMsgFromServer.ToJSON());
-			} else {
-				StopStreamResponse stopStreamResp = new StopStreamResponse();
-				stopStreamResp.FromJSON(streamStr);
-			}
+//			streamMsgFromServer = new Play();
+//			streamMsgFromServer.FromJSON(streamStr);
+//
+//			if (streamMsgFromServer.isCorrectMessage()) {
+//				out.println("received message " + streamMsgFromServer.ToJSON());
+//			} else {
+//				StopGameResponse stopStreamResp = new StopGameResponse();
+//				stopStreamResp.FromJSON(streamStr);
+//			}
 
 		} catch (Exception e) {
 			printDebugLines(e.getStackTrace().toString());
-			StopStreamResponse stopStreamResponse = new StopStreamResponse();
+			StopGameResponse stopStreamResponse = new StopGameResponse();
 			stopStreamResponse.FromJSON(streamStr);
 		}
 		printDebugLines(streamStr);
@@ -200,5 +257,24 @@ public class ClientThread implements Runnable {
 		if (this.debug){
 			System.out.println(message);
 		}		
+	}
+	
+	private JSONArray someItems(){
+		int numExistingItems = ItemType.values().length;
+		
+		List<Item> items = new ArrayList<Item>();
+		Random rand = new Random(); 
+		int x = rand.nextInt(numExistingItems);
+		items.add(new Item(ItemType.getById(x+1), 1));
+		
+		JSONArray jsonArray = new JSONArray();
+		for (int i = 0; i < items.size(); i++)
+	    {
+	      JSONObject formDetailsJson = new JSONObject();
+	      formDetailsJson.put("item", items.get(i).getItem().getName());
+	      formDetailsJson.put("amount", items.get(i).getAmount());
+	      jsonArray.add(formDetailsJson);
+	    }
+		return jsonArray;
 	}
 }

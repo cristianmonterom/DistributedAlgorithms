@@ -5,17 +5,17 @@ import org.json.simple.JSONObject;
 
 import common.ProtocolMessages;
 
-public class StartGameResponse extends RequestResponse {
-	
+public class PlayResponse extends RequestResponse {
+
 	private JSONArray bag;
-	private String token;
+	private String message;
 	
-	public StartGameResponse(JSONArray bag, String token) {
+	public PlayResponse(JSONArray bag, String message) {
 		this.bag = bag;
-		this.token = token;
+		this.message = message;
 	}
-	
-	public StartGameResponse(){
+
+	public PlayResponse() {
 		
 	}
 	
@@ -26,7 +26,7 @@ public class StartGameResponse extends RequestResponse {
 
 	@Override
 	String Action() {
-		return ProtocolMessages.StartingGame.getValue();
+		return ProtocolMessages.Play.getValue();
 	}
 
 	@SuppressWarnings("unchecked")
@@ -35,23 +35,19 @@ public class StartGameResponse extends RequestResponse {
 		JSONObject obj = new JSONObject();
 		obj.put(Type(), Action());
 		obj.put("bag", bag);
-		obj.put("token", token);
+		obj.put("message", this.message);
 		return obj.toJSONString();
 	}
 
-	@SuppressWarnings("unused")
 	@Override
 	public void FromJSON(String _response) {
 		JSONObject obj = null;
 		try {
 			obj = (JSONObject) parser.parse(_response);
-			
 			this.setBag((JSONArray) obj.get("bag"));
-			this.setToken(obj.get("token").toString());
-			
-//			System.out.println("asdfasfds" + obj.get("token").toString());
+			this.setMessage(obj.get("message").toString());
 		} catch (org.json.simple.parser.ParseException e) {
-			System.err.println("StartGameResponse: Message is not valid");
+			System.err.println("PlayResponse: Message is not valid");
 		}	
 	}
 
@@ -59,12 +55,7 @@ public class StartGameResponse extends RequestResponse {
 		this.bag = bag;
 	}
 	
-	public void setToken(String token){
-		this.token = token;
+	public void setMessage(String message){
+		this.message = message;
 	}
-	
-	public String getToken(){
-		return this.token;
-	}
-
 }

@@ -3,25 +3,27 @@ package messaging;
 import org.json.simple.JSONObject;
 import common.ProtocolMessages;
 
-public class CheckAvailabilityRequest extends RequestResponse {
-
-	public CheckAvailabilityRequest(){}
-
+/**
+ * @author Cristian
+ *
+ */
+public class StopGameResponse extends RequestResponse{
+	
 	@Override
 	String Type() {
-		return ProtocolMessages.Request.getValue();
+		return ProtocolMessages.Response.getValue();
 	}
 
 	@Override
 	String Action() {
-		return ProtocolMessages.CheckAvailability.getValue();
+		return ProtocolMessages.StoppedGame.getValue();
 	}
 
 	@SuppressWarnings("unchecked")
 	@Override
 	public String ToJSON() {
 		JSONObject obj = new JSONObject();
-		obj.put(Type(), Action());
+		obj.put(Type(), ProtocolMessages.StoppedGame.getValue());
 		return obj.toJSONString();
 	}
 
@@ -31,7 +33,7 @@ public class CheckAvailabilityRequest extends RequestResponse {
 		try {
 			obj = (JSONObject) parser.parse(_response);
 		} catch (org.json.simple.parser.ParseException e) {
-			System.err.println("CheckAvailabilityRequest: Message is not valid");
+			System.err.println("StopGameResponse: Message is not valid");
 		}
 	}
 

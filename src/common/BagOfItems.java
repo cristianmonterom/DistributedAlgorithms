@@ -61,12 +61,25 @@ public class BagOfItems {
 	
 	public boolean reduceSelected(ItemType item){
 		for (int i=0; i< this.items.size(); i++){
-			if (this.items.get(i).getItem().equals(item)){
+			if (this.items.get(i).getItem().getName().equals(item.getName())){
 				this.items.get(i).removeAmount();
 				return true;
 			}
 		}
 		return false;
+	}
+	
+	@SuppressWarnings("unchecked")
+	public JSONArray getItemJsonArray(){
+		JSONArray jsonArray = new JSONArray();
+		for (int i = 0; i < this.items.size(); i++)
+	    {
+	      JSONObject formDetailsJson = new JSONObject();
+	      formDetailsJson.put("item", this.items.get(i).getItem().getName());
+	      formDetailsJson.put("amount", this.items.get(i).getAmount());
+	      jsonArray.add(formDetailsJson);
+	    }
+		return jsonArray;
 	}
 	
 //	private int totalAmount(){

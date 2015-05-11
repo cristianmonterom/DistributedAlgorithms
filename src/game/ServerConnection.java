@@ -31,8 +31,8 @@ public class ServerConnection extends Connection {
 	@Override
 	public Socket establishConnection() {
 		try {
-			System.out.println("port " + String.valueOf(this.port));
-			System.out.println("waiting for connection request");
+//			System.out.println("port " + String.valueOf(this.port));
+//			System.out.println("waiting for connection request");
 			socket = server.accept();
 		} catch (IOException ex) {
 			ex.printStackTrace();

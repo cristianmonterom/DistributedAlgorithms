@@ -35,7 +35,7 @@ public class StartGameRequest extends RequestResponse {
 	@Override
 	public String ToJSON() {
 		JSONObject obj = new JSONObject();
-		obj.put(Type(), ProtocolMessages.StartGame.getValue());
+		obj.put(Type(), Action());
 		obj.put("numPlayers", this.numPlayers);
 		return obj.toJSONString();
 	}
