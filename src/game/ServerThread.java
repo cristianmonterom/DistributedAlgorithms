@@ -112,19 +112,29 @@ public class ServerThread implements Runnable {
 								this.newGame.addPlayerItem(pr.getPlayer(), newItem);
 							}
 							sendPlayResponse(this.newGame.getBagItems().getItemJsonArray(), message);
-						} else {
+						} 
+						
+						if (this.counterPlays == this.newGame.getNumPlayers()) {
 							sendResults();
 							this.processState = States.GameOver;
 						}
 						break;
-					case StopGame:
-						 receiveStopGameRequest(strFromServer);
-						 sendStopGameResponse();
-						break;
+
 					default:
 						break;
 					}
 					break;
+				case GameOver:
+					switch (RequestResponseFactory.getStateMessage(
+							this.processState, strFromServer)) {
+					case StopGame:
+						 receiveStopGameRequest(strFromServer);
+						 sendStopGameResponse();
+						 this.processState = States.StandBy;
+						break;
+					default:
+						break;
+					}
 //			 default:
 //				
 //				 break;

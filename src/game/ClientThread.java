@@ -38,7 +38,7 @@ public class ClientThread implements Runnable {
 	private OutputStream outputStream;
 	private InputStream inputStream;
 	private Socket socketRef;
-	private int numPlayers = 5;
+	private int numPlayers = 1;
 	
 	private boolean debug = false;
 	private boolean busyServer = false;
@@ -84,9 +84,9 @@ public class ClientThread implements Runnable {
 			receivePlayResponse();
 			
 			receiveResultsResponse();
-//			sendStopgameRequest();
+			sendStopgameRequest();
 //
-//			receiveStopGameResponse();
+			receiveStopGameResponse();
 		}
 		
 
