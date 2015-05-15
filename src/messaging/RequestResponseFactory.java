@@ -88,10 +88,10 @@ public class RequestResponseFactory {
 					return ProtocolMessages.StartGame;
 				} 
 			case GameStarted:
-//				if (obj.get(ProtocolMessages.Request.getValue()).equals(
-//						ProtocolMessages.SelectedItems.getValue())) {
-//					return ProtocolMessages.SelectedItems;
-//				}
+				if (obj.get(ProtocolMessages.Request.getValue()).equals(
+						ProtocolMessages.Bag.getValue())) {
+					return ProtocolMessages.Bag;
+				}
 				if (obj.get(ProtocolMessages.Request.getValue()).equals(
 						ProtocolMessages.Play.getValue())) {
 					return ProtocolMessages.Play;

@@ -12,6 +12,8 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 
+import messaging.BagRequest;
+import messaging.BagResponse;
 import messaging.CheckAvailabilityRequest;
 import messaging.CheckAvailabilityResponse;
 import messaging.PlayRequest;
@@ -41,10 +43,10 @@ public class ServerThread implements Runnable {
 
 	public ServerThread(Socket socket) {
 		processState = States.StandBy;
-		boolean started = true;
-		if (!started) {
-			throw new RuntimeException("Not able to start native grabber!");
-		}
+//		boolean started = true;
+//		if (!started) {
+//			throw new RuntimeException("Not able to start native grabber!");
+//		}
 
 		try {
 			inputStream = socket.getInputStream();
@@ -107,7 +109,13 @@ public class ServerThread implements Runnable {
 							for (int i = 0; i< items.size(); i++){
 								JSONObject obj = (JSONObject) parser.parse(items.get(i).toString());
 								ItemType newItemType = ItemType.getByName(obj.get("item").toString());
-								Item newItem = new Item(newItemType, Integer.parseInt(obj.get("amount").toString()));
+								int amount = 1;
+								try {
+									amount = Integer.parseInt(obj.get("amount").toString());
+								} catch (Exception e) {
+									amount = 1;
+								}
+								Item newItem = new Item(newItemType, amount);
 								this.newGame.takenItem(newItemType);
 								this.newGame.addPlayerItem(pr.getPlayer(), newItem);
 							}
@@ -119,8 +127,12 @@ public class ServerThread implements Runnable {
 							this.processState = States.GameOver;
 						}
 						break;
-
+					case Bag:
+						receiveBagRequest(strFromServer);
+						sendBagResponse(this.newGame.getBagItems());
+						break;
 					default:
+						printDebugLines("Invalid message type in state: " + this.processState);
 						break;
 					}
 					break;
@@ -169,6 +181,18 @@ public class ServerThread implements Runnable {
 		}
 	}
 
+	private boolean receiveBagRequest(String strFromServer) {
+		try {
+			BagRequest bagRequest;
+			bagRequest = new BagRequest();
+			bagRequest.FromJSON(strFromServer);
+			printDebugLines(bagRequest.ToJSON());
+			return true;
+		} catch (Exception e) {
+			return false;
+		}
+	}
+	
 	private int receiveStartGameRequest(String strFromServer) {
 		StartGameRequest startGameRequest = new StartGameRequest();
 		startGameRequest.FromJSON(strFromServer);
@@ -215,6 +239,14 @@ public class ServerThread implements Runnable {
 		this.busy = true;
 		out.println(message);
 		this.processState = States.GameStarted;
+		printDebugLines(message);
+	}
+
+	private void sendBagResponse(BagOfItems bag) throws IOException {
+		String message = null;
+		BagResponse response = new BagResponse(bag.getItemJsonArray());
+		message = response.ToJSON();
+		out.println(message);
 		printDebugLines(message);
 	}
 

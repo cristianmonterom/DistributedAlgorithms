@@ -48,13 +48,14 @@ public class Main {
 		} else {
 			ServerConnection connAsServer = new ServerConnection(
 					getServerPort());
-			while (true){
+//			while (true){
+				System.out.println("init asdfadfadsadsf");
 				connAsServer.establishConnection();
 				ServerThread sThread = new ServerThread(connAsServer.socket);
 				sThread.setDebug(debug);
 				Thread serverThread = new Thread(sThread);
 				serverThread.start();
-			}
+//			}
 		}
 
 		/**
@@ -103,55 +104,55 @@ public class Main {
 		// }
 	}
 
-	private static Socket notOverloadedReceived(Socket connectionSocket) {
-		Socket retSocket = null;
-		retSocket = receiveResponse(connectionSocket);
-		return retSocket;
-	}
-
-	private static Socket receiveResponse(Socket initialSocket) {
-		String strFromServer = null;
-		RequestResponse rcvdRespFromServer;
-		RequestResponseFactory helperOverloadMsg = new RequestResponseFactory();
-		InputStream inputStream = null;
-		BufferedReader in;
-
-		do {
-			try {
-				inputStream = initialSocket.getInputStream();
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-
-			in = new BufferedReader(new InputStreamReader(inputStream));
-
-			try {
-				strFromServer = in.readLine();
-			} catch (IOException ioEx) {
-				ioEx.printStackTrace();
-			}
-
-			System.err.println(strFromServer);
-			// rcvdRespFromServer = "asdf";
-			//
-			rcvdRespFromServer = helperOverloadMsg.FromJSON(strFromServer);
-			// if(rcvdRespFromServer!=null)
-			// {
-			// newIpAddr =
-			// ((OverloadResponse)
-			// rcvdRespFromServer).getAllClients().get(0).getIpAddress();
-			// newPort =
-			// ((OverloadResponse)
-			// rcvdRespFromServer).getAllClients().get(0).getServicePort();
-			//
-			// System.err.println("reconnecting to: "+newIpAddr+" port:"+newPort);
-			// connAsClient = new ClientConnection(newIpAddr,newPort);
-			// initialSocket = connAsClient.establishConnection();
-			// }
-		} while (rcvdRespFromServer != null);
-
-		return initialSocket;
-	}
+//	private static Socket notOverloadedReceived(Socket connectionSocket) {
+//		Socket retSocket = null;
+//		retSocket = receiveResponse(connectionSocket);
+//		return retSocket;
+//	}
+//
+//	private static Socket receiveResponse(Socket initialSocket) {
+//		String strFromServer = null;
+//		RequestResponse rcvdRespFromServer;
+//		RequestResponseFactory helperOverloadMsg = new RequestResponseFactory();
+//		InputStream inputStream = null;
+//		BufferedReader in;
+//
+//		do {
+//			try {
+//				inputStream = initialSocket.getInputStream();
+//			} catch (IOException e) {
+//				e.printStackTrace();
+//			}
+//
+//			in = new BufferedReader(new InputStreamReader(inputStream));
+//
+//			try {
+//				strFromServer = in.readLine();
+//			} catch (IOException ioEx) {
+//				ioEx.printStackTrace();
+//			}
+//
+//			System.err.println(strFromServer);
+//			// rcvdRespFromServer = "asdf";
+//			//
+//			rcvdRespFromServer = helperOverloadMsg.FromJSON(strFromServer);
+//			// if(rcvdRespFromServer!=null)
+//			// {
+//			// newIpAddr =
+//			// ((OverloadResponse)
+//			// rcvdRespFromServer).getAllClients().get(0).getIpAddress();
+//			// newPort =
+//			// ((OverloadResponse)
+//			// rcvdRespFromServer).getAllClients().get(0).getServicePort();
+//			//
+//			// System.err.println("reconnecting to: "+newIpAddr+" port:"+newPort);
+//			// connAsClient = new ClientConnection(newIpAddr,newPort);
+//			// initialSocket = connAsClient.establishConnection();
+//			// }
+//		} while (rcvdRespFromServer != null);
+//
+//		return initialSocket;
+//	}
 
 	private static void setArgumentsFromCommandLine(String[] args) {
 		ArgumentParser parser = new ArgumentParser();

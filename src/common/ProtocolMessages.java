@@ -7,7 +7,7 @@ public enum ProtocolMessages {
 			StoredItems("storeditems"), Results("results"),
 			Request("request"), Response("response"),
 			Play("play"), TakenServer("takenserver"),
-			CheckAvailability("checkavailability")
+			CheckAvailability("checkavailability"), Bag("bag")
 			;
 
 	private String value;

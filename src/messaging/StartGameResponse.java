@@ -39,17 +39,13 @@ public class StartGameResponse extends RequestResponse {
 		return obj.toJSONString();
 	}
 
-	@SuppressWarnings("unused")
 	@Override
 	public void FromJSON(String _response) {
 		JSONObject obj = null;
 		try {
 			obj = (JSONObject) parser.parse(_response);
-			
 			this.setBag((JSONArray) obj.get("bag"));
 			this.setToken(obj.get("token").toString());
-			
-//			System.out.println("asdfasfds" + obj.get("token").toString());
 		} catch (org.json.simple.parser.ParseException e) {
 			System.err.println("StartGameResponse: Message is not valid");
 		}	
@@ -67,4 +63,7 @@ public class StartGameResponse extends RequestResponse {
 		return this.token;
 	}
 
+	public JSONArray getBag(){
+		return this.bag;
+	}
 }

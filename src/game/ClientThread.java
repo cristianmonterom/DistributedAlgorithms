@@ -45,7 +45,7 @@ public class ClientThread implements Runnable {
 	private String token;
 
 	public ClientThread(Socket socket) {
-		socketRef = socket;
+		this.socketRef = socket;
 		try {
 			inputStream = socket.getInputStream();
 			outputStream = socket.getOutputStream();
@@ -259,6 +259,7 @@ public class ClientThread implements Runnable {
 		}		
 	}
 	
+	@SuppressWarnings("unchecked")
 	private JSONArray someItems(){
 		int numExistingItems = ItemType.values().length;
 		

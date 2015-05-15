@@ -13,6 +13,11 @@ public class Item {
 		this.amount = amount;
 	}
 	
+	public Item(JSONObject item){
+		this.item = ItemType.getByName(item.get("item").toString());
+		this.amount = Integer.parseInt(item.get("amount").toString());
+	}
+	
 	@SuppressWarnings("unchecked")
 	public String ToJSON(){
 		JSONObject obj = new JSONObject();
@@ -40,4 +45,6 @@ public class Item {
 	public void removeAmount(){
 		this.setAmount(amount - 1);
 	}
+	
+	
 }

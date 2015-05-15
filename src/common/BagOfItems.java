@@ -45,7 +45,8 @@ public class BagOfItems {
 	      JSONObject formDetailsJson = new JSONObject();
 	      formDetailsJson.put("item", this.items.get(i).getItem().getName());
 	      formDetailsJson.put("amount", this.items.get(i).getAmount());
-
+	      formDetailsJson.put("img", this.items.get(i).getItem().getImagePath());
+	      
 	      jsonArray.add(formDetailsJson);
 	    }
 		obj.put("items", jsonArray);
@@ -77,11 +78,17 @@ public class BagOfItems {
 	      JSONObject formDetailsJson = new JSONObject();
 	      formDetailsJson.put("item", this.items.get(i).getItem().getName());
 	      formDetailsJson.put("amount", this.items.get(i).getAmount());
+	      formDetailsJson.put("img", this.items.get(i).getItem().getImagePath());
 	      jsonArray.add(formDetailsJson);
 	    }
 		return jsonArray;
 	}
 	
+//	public String to_json(){
+//		JSONObject obj = new JSONObject();
+//		obj.put("items", this.items);
+//		return obj.toJSONString();
+//	}
 //	private int totalAmount(){
 //		int sum = 0;
 //		for (int i = 0; i < this.items.size(); i++){
