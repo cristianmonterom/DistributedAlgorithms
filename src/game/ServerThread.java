@@ -99,6 +99,10 @@ public class ServerThread implements Runnable {
 				case GameStarted:
 					switch (RequestResponseFactory.getStateMessage(
 							this.processState, strFromServer)) {
+					case CheckAvailability:
+						receiveCheckAvailabilityRequest(strFromServer);
+						sendCheckAvailabilityResponse();
+						break;
 					case Play:
 						PlayRequest pr = receivePlayRequest(strFromServer);
 						if (!this.newGame.getBagItems().isEmpty()){

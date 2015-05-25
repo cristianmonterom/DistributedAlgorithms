@@ -89,10 +89,17 @@ public class ClientThread implements Runnable {
 			}
 			
 			receiveBagResponse();
-			
+			try {
+				sendResultsRequest();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
 			receiveResultsResponse();
+
+			System.out.println("asdfasdfasdfasdf");
 			sendStopgameRequest();
 			receiveStopGameResponse();
+			
 		}
 		
 
@@ -185,6 +192,12 @@ public class ClientThread implements Runnable {
 		}
 		bagResponse.FromJSON(strFromServer);
 		printDebugLines(bagResponse.ToJSON());
+	}
+	
+	private void sendResultsRequest() throws IOException {
+		ResultsRequest request = new ResultsRequest();
+		out.println(request.ToJSON());
+		printDebugLines(request.ToJSON());
 	}
 	
 	private void sendBagRequest() throws IOException {
