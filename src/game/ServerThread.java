@@ -19,6 +19,8 @@ import messaging.CheckAvailabilityResponse;
 import messaging.PlayRequest;
 import messaging.PlayResponse;
 import messaging.RequestResponseFactory;
+import messaging.ResultsRequest;
+import messaging.ResultsResponse;
 import messaging.StartGameRequest;
 import messaging.StartGameResponse;
 import messaging.StopGameRequest;
@@ -40,13 +42,10 @@ public class ServerThread implements Runnable {
 	private Game newGame;
 	private States processState;
 	private int counterPlays = 0;
+	private String player;
 
 	public ServerThread(Socket socket) {
 		processState = States.StandBy;
-//		boolean started = true;
-//		if (!started) {
-//			throw new RuntimeException("Not able to start native grabber!");
-//		}
 
 		try {
 			inputStream = socket.getInputStream();
@@ -70,8 +69,9 @@ public class ServerThread implements Runnable {
 					strFromServer = in.readLine();
 				} while (strFromServer.isEmpty());
 			} catch (IOException e1) {
-				System.out.println("out");
-				String error = e1.getMessage();
+				this.printDebugLines("Error while reading: " + e1.getStackTrace().toString());
+//				System.out.println("out");
+//				String error = e1.getMessage();
 			}
 
 			try {
@@ -100,8 +100,9 @@ public class ServerThread implements Runnable {
 					switch (RequestResponseFactory.getStateMessage(
 							this.processState, strFromServer)) {
 					case Play:
-						if (this.counterPlays < this.newGame.getNumPlayers()){
-							PlayRequest pr = receivePlayRequest(strFromServer);
+						PlayRequest pr = receivePlayRequest(strFromServer);
+						if (!this.newGame.getBagItems().isEmpty()){
+//							if (this.counterPlays < this.newGame.getNumPlayers()){
 							String message = this.newGame.validTurn(pr.getToken()) ? "" : "Incorrect Token";
 							JSONArray items = pr.getItems();
 							JSONParser parser = new JSONParser();
@@ -120,10 +121,9 @@ public class ServerThread implements Runnable {
 								this.newGame.addPlayerItem(pr.getPlayer(), newItem);
 							}
 							sendPlayResponse(this.newGame.getBagItems().getItemJsonArray(), message);
-						} 
-						
-						if (this.counterPlays == this.newGame.getNumPlayers()) {
-							sendResults();
+						} else {
+//						if (this.counterPlays == this.newGame.getNumPlayers()) {
+							sendResultsResponse();
 							this.processState = States.GameOver;
 						}
 						break;
@@ -139,6 +139,10 @@ public class ServerThread implements Runnable {
 				case GameOver:
 					switch (RequestResponseFactory.getStateMessage(
 							this.processState, strFromServer)) {
+					case Results:
+						receiveResultsRequest(strFromServer);
+						sendResultsResponse();
+						break;
 					case StopGame:
 						 receiveStopGameRequest(strFromServer);
 						 sendStopGameResponse();
@@ -153,14 +157,26 @@ public class ServerThread implements Runnable {
 				}
 
 			} catch (Exception e) {
-				String error = e.getMessage();
-				// printDebugLines(e.getStackTrace().toString());
+//				String error = e.getMessage();
+				 printDebugLines(e.getStackTrace().toString());
 			}
 		}
 	}
 
-	private void sendResults() {
-		
+	private void receiveResultsRequest(String strFromServer) {
+		try {
+			ResultsRequest resultsRequest = new ResultsRequest();
+			resultsRequest.FromJSON(strFromServer);
+			this.player = resultsRequest.getPlayer();
+			printDebugLines(resultsRequest.ToJSON());
+		} catch (Exception e) {
+		}
+	}
+
+	private void sendResultsResponse() {
+		ResultsResponse response = new ResultsResponse(this.newGame.getBagOfZombies().getZombieJsonArray(), this.newGame.getWinner().getName(), this.newGame.getBagOfZombies().getZombiesScore());
+		out.println(response.ToJSON());
+		printDebugLines(response.ToJSON());
 	}
 
 	private void sendPlayResponse(JSONArray bag, String message) {

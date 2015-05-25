@@ -82,10 +82,16 @@ public class ClientThread implements Runnable {
 			}
 
 			receivePlayResponse();
+			try{
+				sendBagRequest();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+			
+			receiveBagResponse();
 			
 			receiveResultsResponse();
 			sendStopgameRequest();
-//
 			receiveStopGameResponse();
 		}
 		
@@ -169,6 +175,24 @@ public class ClientThread implements Runnable {
 		printDebugLines(startGameResponse.ToJSON());
 	}
 
+	private void receiveBagResponse() {
+		String strFromServer = null;
+		BagResponse bagResponse = new BagResponse();
+		try {
+			strFromServer = in.readLine();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		bagResponse.FromJSON(strFromServer);
+		printDebugLines(bagResponse.ToJSON());
+	}
+	
+	private void sendBagRequest() throws IOException {
+		BagRequest request = new BagRequest();
+		out.println(request.ToJSON());
+		printDebugLines(request.ToJSON());
+	}
+	
 	private void sendStartGameRequest() throws IOException {
 		StartGameRequest request = new StartGameRequest(this.numPlayers);
 		out.println(request.ToJSON());
@@ -181,6 +205,7 @@ public class ClientThread implements Runnable {
 		out.println(request.ToJSON());
 		printDebugLines(request.ToJSON());
 	}
+	
 	
 	private void sendStopgameRequest() {
 		StopGameRequest stopGameReq = new StopGameRequest();

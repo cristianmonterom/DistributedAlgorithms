@@ -12,7 +12,6 @@ public class Player {
 
 
 	public Player(String name) {
-//		this.id = id;
 		this.name = name;
 		this.items = new ArrayList<Item>();
 	}
@@ -42,9 +41,11 @@ public class Player {
 		return result;
 	}
 	
+	@SuppressWarnings({ "unchecked", "null" })
 	public JSONObject getJsonObject(){
 		JSONObject obj = null;
 		obj.put("name", this.name);
+		obj.put("score", getScore());
 		return obj;
 	}
 }

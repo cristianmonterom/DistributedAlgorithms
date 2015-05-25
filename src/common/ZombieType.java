@@ -1,7 +1,8 @@
 package common;
 
 public enum ZombieType {
-	Atype(1, "a-type", 50, "a-type.jpg"), Btype(2, "b-type", 100, "b-type.jpg");
+	Atype(1, "a-type", 50, "a-type.jpg");
+	//, Btype(2, "b-type", 100, "b-type.jpg");
 	private int id;
 	private String name;
 	private int value;

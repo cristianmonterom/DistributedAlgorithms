@@ -23,7 +23,7 @@ public class BagResponse extends RequestResponse{
 
 	@Override
 	String Action() {
-		return ProtocolMessages.StartingGame.getValue();
+		return ProtocolMessages.Bag.getValue();
 	}
 
 	@SuppressWarnings("unchecked")
@@ -42,7 +42,7 @@ public class BagResponse extends RequestResponse{
 			obj = (JSONObject) parser.parse(_response);
 			this.setBag((JSONArray) obj.get("bag"));
 		} catch (org.json.simple.parser.ParseException e) {
-			System.err.println("StartGameResponse: Message is not valid");
+			System.err.println("BagResponse: Message is not valid");
 		}	
 	}
 

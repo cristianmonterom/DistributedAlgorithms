@@ -84,17 +84,12 @@ public class BagOfItems {
 		return jsonArray;
 	}
 	
-//	public String to_json(){
-//		JSONObject obj = new JSONObject();
-//		obj.put("items", this.items);
-//		return obj.toJSONString();
-//	}
-//	private int totalAmount(){
-//		int sum = 0;
-//		for (int i = 0; i < this.items.size(); i++){
-//			sum += this.items.get(i).getAmount();
-//	    }
-//		return sum;
-//	}
+	public boolean isEmpty() {
+		int total = 0;
+		for (int i = 0; i < this.items.size(); i++) {
+			total += this.items.get(i).getAmount();
+	    }
+		return total == 0 ? true : false;
+	}
 	
 }

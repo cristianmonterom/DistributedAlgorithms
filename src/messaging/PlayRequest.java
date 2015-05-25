@@ -10,8 +10,6 @@ public class PlayRequest extends RequestResponse {
 	
 	private String token;
 	private String player;
-//	private String token_validation;
-//	private String player_validation;
 	
 	public PlayRequest(String token_val, String player_val) {
 		this.token = token_val;
@@ -75,12 +73,4 @@ public class PlayRequest extends RequestResponse {
 	public String getPlayer(){
 		return this.player;
 	}
-//	public boolean isValid(){
-////		if (this.player.equals(this.player_validation) && this.token.equals(this.token_validation)){
-//		if (this.token.equals(this.token_validation)){
-//			return true;
-//		} else {
-//			return false;
-//		}
-//	}
 }

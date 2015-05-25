@@ -4,16 +4,15 @@ import java.util.List;
 
 public class Game {
 	private int numPlayers;
-	private String leaderPlayer;
-	private String currentPlayer;
-	private String NextPlayer;
 	private BagOfItems bagItems;
+	private BagOfZombies bagZombies;
 	private Token token;
 	private List<Player> players;
 	
 	public Game(int numplayers){
 		this.numPlayers = numplayers;
 		bagItems = new BagOfItems(numPlayers);
+		bagZombies = new BagOfZombies(numplayers * 2);
 		token = new Token();
 	}
 	
@@ -75,5 +74,9 @@ public class Game {
 		} catch (Exception e) {
 			return false;
 		}
+	}
+	
+	public BagOfZombies getBagOfZombies(){
+		return this.bagZombies;
 	}
 }
