@@ -40,14 +40,14 @@ public class Main {
 		} else {
 			ServerConnection connAsServer = new ServerConnection(
 					getServerPort());
-//			while (true){
+			while (true){
 //				System.out.println("init asdfadfadsadsf");
 				connAsServer.establishConnection();
 				ServerThread sThread = new ServerThread(connAsServer.socket);
 				sThread.setDebug(debug);
 				Thread serverThread = new Thread(sThread);
 				serverThread.start();
-//			}
+			}
 		}
 	}
 
