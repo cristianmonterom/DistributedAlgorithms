@@ -29,6 +29,10 @@ public class Game {
 		return instance;
 	}
 	
+	public boolean isNull() {
+		return instance == null ? true : false;
+	}
+	
 	public BagOfItems getBagItems(){
 		return this.bagItems;
 	}

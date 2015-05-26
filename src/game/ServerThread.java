@@ -188,8 +188,8 @@ public class ServerThread implements Runnable {
 	}
 
 	private void sendResultsResponse() {
-		Player p = this.newGame.getWinner();
-		String sPlayer = p == null ? "" : p.getName(); 
+//		Player p = this.newGame.getWinner();
+//		String sPlayer = p == null ? "" : p.getName(); 
 		ResultsResponse response = new ResultsResponse(this.newGame.getPlayerResultsArray());
 		out.println(response.ToJSON());
 		printDebugLines(response.ToJSON());
@@ -251,7 +251,7 @@ public class ServerThread implements Runnable {
 	}
 	private void sendCheckAvailabilityResponse() throws IOException {
 		try {
-			this.busy = this.newGame == null ? false : true;			
+			this.busy = this.newGame.isNull() ? false : true;			
 		} catch (Exception e) {
 			this.busy = false;
 		}
