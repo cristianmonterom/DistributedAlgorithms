@@ -42,8 +42,6 @@ public class ServerThread implements Runnable {
 	private boolean busy;
 	private static Game newGame;
 	private static States processState = States.StandBy;
-	private int counterPlays = 0;
-	private String player;
 
 //	private static ServerThread instance = null;
 	
@@ -71,7 +69,7 @@ public class ServerThread implements Runnable {
 	@Override
 	public void run() {
 		String strFromServer = null;
-		while (this.processState != States.End) {
+		while (processState != States.End) {
 			try {
 				do {
 					strFromServer = in.readLine();
@@ -83,11 +81,11 @@ public class ServerThread implements Runnable {
 			}
 
 			try {
-				printDebugLines("state: " + this.processState);
-				switch (this.processState) {
+				printDebugLines("state: " + processState);
+				switch (processState) {
 				case StandBy:
 					switch (RequestResponseFactory.getStateMessage(
-							this.processState, strFromServer)) {
+							processState, strFromServer)) {
 					case CheckAvailability:
 						receiveCheckAvailabilityRequest(strFromServer);
 						sendCheckAvailabilityResponse();
@@ -97,17 +95,17 @@ public class ServerThread implements Runnable {
 						newGame = Game.getInstance(players);
 						sendStartGameResponse(newGame.getToken(),
 								newGame.getBagItems());
-						this.processState = States.GameStarted;
+						processState = States.GameStarted;
 						break;
 					default:
-						printDebugLines("Invalid message type in state: " + this.processState);
+						printDebugLines("Invalid message type in state: " + processState);
 						break;
 					}
 					break;
 				case GameStarted:
 //					System.out.println("qqqqq---" + strFromServer);
 					switch (RequestResponseFactory.getStateMessage(
-							this.processState, strFromServer)) {
+							processState, strFromServer)) {
 					case CheckAvailability:
 						receiveCheckAvailabilityRequest(strFromServer);
 						sendCheckAvailabilityResponse();
@@ -138,7 +136,7 @@ public class ServerThread implements Runnable {
 						} else {
 //						if (this.counterPlays == newGame.getNumPlayers()) {
 							sendResultsResponse();
-							this.processState = States.GameOver;
+							processState = States.GameOver;
 						}
 //						for (int i =0; newGame.get)
 //						@SuppressWarnings("unused")
@@ -147,20 +145,20 @@ public class ServerThread implements Runnable {
 					case Results:
 						receiveResultsRequest(strFromServer);
 						sendResultsResponse();
-						this.processState = States.GameOver;
+						processState = States.GameOver;
 						break;
 					case Bag:
 						receiveBagRequest(strFromServer);
 						sendBagResponse(newGame.getBagItems());
 						break;
 					default:
-						printDebugLines("Invalid message type in state: " + this.processState);
+						printDebugLines("Invalid message type in state: " + processState);
 						break;
 					}
 					break;
 				case GameOver:
 					switch (RequestResponseFactory.getStateMessage(
-							this.processState, strFromServer)) {
+							processState, strFromServer)) {
 					case CheckAvailability:
 						receiveCheckAvailabilityRequest(strFromServer);
 						sendCheckAvailabilityResponse();
@@ -176,7 +174,7 @@ public class ServerThread implements Runnable {
 					case StopGame:
 						 receiveStopGameRequest(strFromServer);
 						 sendStopGameResponse();
-						 this.processState = States.End;
+						 processState = States.End;
 						break;
 					default:
 						break;
@@ -259,7 +257,6 @@ public class ServerThread implements Runnable {
 			PlayRequest playRequest = new PlayRequest("", "");//new PlayRequest(newGame.getToken().getTokenSession(), "");
 			playRequest.FromJSON(strFromServer);
 			printDebugLines(playRequest.ToJSON());
-			this.counterPlays++;
 			return playRequest;
 		} catch (Exception e) {
 			return null;
@@ -291,7 +288,7 @@ public class ServerThread implements Runnable {
 		message = request.ToJSON();
 		this.busy = true;
 		out.println(message);
-		this.processState = States.GameStarted;
+		processState = States.GameStarted;
 		printDebugLines(message);
 	}
 

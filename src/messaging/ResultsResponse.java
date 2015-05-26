@@ -1,5 +1,7 @@
 package messaging;
 
+import java.util.HashMap;
+
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
@@ -57,6 +59,21 @@ public class ResultsResponse extends RequestResponse {
 
 	public void setPlayers(JSONArray players){
 		this.players = players;
+	}
+	
+	@SuppressWarnings({ "rawtypes", "unchecked" })
+	public HashMap getPlayers(){
+		try {
+			HashMap hm = new HashMap();
+			for (int i = 0; i < players.size(); i++)
+		    {
+		      JSONObject objPlayer = (JSONObject) players.get(i);
+		      hm.put(objPlayer.get("player"), objPlayer.get("live"));
+		    }
+			return hm;			
+		} catch (Exception e) {
+			return null;
+		}
 	}
 	
 }
