@@ -45,7 +45,10 @@ public class ServerThread implements Runnable {
 	private int counterPlays = 0;
 	private String player;
 
-	public ServerThread(Socket socket) {
+	private static ServerThread instance = null;
+	
+	protected ServerThread(Socket socket) {
+//		public ServerThread(Socket socket, States pState) {
 		processState = States.StandBy;
 
 		try {
@@ -58,9 +61,13 @@ public class ServerThread implements Runnable {
 		in = new BufferedReader(new InputStreamReader(inputStream));
 	}
 
-	public ServerThread() {
+	public static ServerThread getInstance(Socket socket){
+		if (instance == null) {
+			instance = new ServerThread(socket);
+		}
+		return instance;
 	}
-
+	
 	@Override
 	public void run() {
 		String strFromServer = null;

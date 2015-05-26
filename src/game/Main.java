@@ -4,7 +4,7 @@ import java.net.Socket;
 import java.util.ArrayList;
 
 import common.Game;
-
+import common.States;
 import messaging.StatusResponse;
 
 public class Main {
@@ -25,7 +25,6 @@ public class Main {
 	public static void main(String[] args) {
 		Socket socket = new Socket();
 
-//		System.out.println(new BagOfItems(3).ToJSON());
 		/**
 		 * parsing arguments
 		 */
@@ -42,9 +41,12 @@ public class Main {
 		} else {
 			ServerConnection connAsServer = new ServerConnection(
 					getServerPort());
+//			Game nGame;
+//			States processState = States.StandBy;
 			while (true){
 				connAsServer.establishConnection();
-				ServerThread sThread = new ServerThread(connAsServer.socket);
+//				ServerThread sThread = new ServerThread(connAsServer.socket);
+				ServerThread sThread = ServerThread.getInstance(connAsServer.socket);
 				sThread.setDebug(debug);
 				Thread serverThread = new Thread(sThread);
 				serverThread.start();
