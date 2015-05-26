@@ -45,8 +45,8 @@ public class Main {
 //			States processState = States.StandBy;
 			while (true){
 				connAsServer.establishConnection();
-//				ServerThread sThread = new ServerThread(connAsServer.socket);
-				ServerThread sThread = ServerThread.getInstance(connAsServer.socket);
+				ServerThread sThread = new ServerThread(connAsServer.socket);
+//				ServerThread sThread = ServerThread.getInstance(connAsServer.socket);
 				sThread.setDebug(debug);
 				Thread serverThread = new Thread(sThread);
 				serverThread.start();
