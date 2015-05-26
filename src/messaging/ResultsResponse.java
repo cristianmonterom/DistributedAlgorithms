@@ -7,14 +7,9 @@ import common.ProtocolMessages;
 
 public class ResultsResponse extends RequestResponse {
 	
-//	private String winner;
-//	private JSONArray zombies;
-//	private int deadZombies;
 	private JSONArray players;
 	
 	public ResultsResponse(JSONArray players) {
-//		this.zombies = zombies;
-//		this.winner = winner;
 		this.players = players;
 	}
 

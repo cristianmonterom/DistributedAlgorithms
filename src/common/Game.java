@@ -1,5 +1,6 @@
 package common;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.json.simple.JSONArray;
@@ -20,6 +21,7 @@ public class Game {
 		bagItems = new BagOfItems(numPlayers);
 		bagZombies = new BagOfZombies(numplayers * 2);
 		token = new Token();
+		this.players = new ArrayList<Player>();
 	}
 	
 	public static Game getInstance(int numPlayers){
@@ -76,6 +78,7 @@ public class Game {
 			this.players.add(newPlayer);
 			return true;
 		} catch (Exception e) {
+			System.out.println("error adding player: " + name + " " + e.getMessage());
 			return false;
 		}
 	}

@@ -132,6 +132,7 @@ public class ServerThread implements Runnable {
 								Item newItem = new Item(newItemType, amount);
 								newGame.takenItem(newItemType);
 								newGame.addPlayerItem(pr.getPlayer(), newItem);
+//								System.out.println(pr.getPlayer() + "--" + newItem.getItem().getName());
 							}
 							sendPlayResponse(newGame.getBagItems().getItemJsonArray(), message);
 						} else {
@@ -139,6 +140,9 @@ public class ServerThread implements Runnable {
 							sendResultsResponse();
 							this.processState = States.GameOver;
 						}
+//						for (int i =0; newGame.get)
+//						@SuppressWarnings("unused")
+//						JSONArray asdf= newGame.getPlayerResultsArray();
 						break;
 					case Results:
 						receiveResultsRequest(strFromServer);
