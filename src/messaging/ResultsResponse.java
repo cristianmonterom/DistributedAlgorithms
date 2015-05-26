@@ -48,7 +48,11 @@ public class ResultsResponse extends RequestResponse {
 		try {
 			obj = (JSONObject) parser.parse(_response);
 			this.setzombies((JSONArray) obj.get("zombies"));
-			this.winner = obj.get("winner").toString();
+			try {
+				this.winner = obj.get("winner").toString();				
+			} catch (Exception e) {
+				this.winner = "";
+			}
 			this.deadZombies = Integer.parseInt(obj.get("deadZombies").toString());
 		} catch (org.json.simple.parser.ParseException e) {
 			System.err.println("ResultsResponse: Message is not valid");

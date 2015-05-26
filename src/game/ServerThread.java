@@ -29,6 +29,7 @@ import common.BagOfItems;
 import common.Game;
 import common.Item;
 import common.ItemType;
+import common.Player;
 import common.States;
 import common.Token;
 
@@ -63,7 +64,7 @@ public class ServerThread implements Runnable {
 	@Override
 	public void run() {
 		String strFromServer = null;
-		while (this.processState != States.GameOver) {
+		while (this.processState != States.End) {
 			try {
 				do {
 					strFromServer = in.readLine();
@@ -97,6 +98,7 @@ public class ServerThread implements Runnable {
 					}
 					break;
 				case GameStarted:
+//					System.out.println("qqqqq---" + strFromServer);
 					switch (RequestResponseFactory.getStateMessage(
 							this.processState, strFromServer)) {
 					case CheckAvailability:
@@ -131,6 +133,11 @@ public class ServerThread implements Runnable {
 							this.processState = States.GameOver;
 						}
 						break;
+					case Results:
+						receiveResultsRequest(strFromServer);
+						sendResultsResponse();
+						this.processState = States.GameOver;
+						break;
 					case Bag:
 						receiveBagRequest(strFromServer);
 						sendBagResponse(this.newGame.getBagItems());
@@ -143,6 +150,10 @@ public class ServerThread implements Runnable {
 				case GameOver:
 					switch (RequestResponseFactory.getStateMessage(
 							this.processState, strFromServer)) {
+					case CheckAvailability:
+						receiveCheckAvailabilityRequest(strFromServer);
+						sendCheckAvailabilityResponse();
+						break;
 					case Results:
 						receiveResultsRequest(strFromServer);
 						sendResultsResponse();
@@ -150,14 +161,13 @@ public class ServerThread implements Runnable {
 					case StopGame:
 						 receiveStopGameRequest(strFromServer);
 						 sendStopGameResponse();
-						 this.processState = States.StandBy;
+						 this.processState = States.End;
 						break;
 					default:
 						break;
 					}
-//			 default:
-//				
-//				 break;
+				default:
+					break;
 				}
 
 			} catch (Exception e) {
@@ -178,7 +188,9 @@ public class ServerThread implements Runnable {
 	}
 
 	private void sendResultsResponse() {
-		ResultsResponse response = new ResultsResponse(this.newGame.getBagOfZombies().getZombieJsonArray(), this.newGame.getWinner().getName(), this.newGame.getBagOfZombies().getZombiesScore());
+		Player p = this.newGame.getWinner();
+		String sPlayer = p == null ? "" : p.getName(); 
+		ResultsResponse response = new ResultsResponse(this.newGame.getBagOfZombies().getZombieJsonArray(), sPlayer, this.newGame.getBagOfZombies().getZombiesScore());
 		out.println(response.ToJSON());
 		printDebugLines(response.ToJSON());
 	}
@@ -238,6 +250,11 @@ public class ServerThread implements Runnable {
 		}
 	}
 	private void sendCheckAvailabilityResponse() throws IOException {
+		try {
+			this.busy = this.newGame == null ? false : true;			
+		} catch (Exception e) {
+			this.busy = false;
+		}
 		CheckAvailabilityResponse request = new CheckAvailabilityResponse(
 				this.busy);
 		out.println(request.ToJSON());

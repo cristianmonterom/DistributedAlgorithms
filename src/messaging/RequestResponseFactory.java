@@ -89,6 +89,10 @@ public class RequestResponseFactory {
 				} 
 			case GameStarted:
 				if (obj.get(ProtocolMessages.Request.getValue()).equals(
+						ProtocolMessages.CheckAvailability.getValue())) {
+					return ProtocolMessages.CheckAvailability;
+				}
+				if (obj.get(ProtocolMessages.Request.getValue()).equals(
 						ProtocolMessages.Bag.getValue())) {
 					return ProtocolMessages.Bag;
 				}
@@ -100,7 +104,25 @@ public class RequestResponseFactory {
 						ProtocolMessages.StopGame.getValue())) {
 					return ProtocolMessages.StopGame;
 				}
-			
+				if (obj.get(ProtocolMessages.Request.getValue()).equals(
+						ProtocolMessages.Results.getValue())) {
+					return ProtocolMessages.Results;
+				}
+				break;
+			case GameOver:
+				if (obj.get(ProtocolMessages.Request.getValue()).equals(
+						ProtocolMessages.CheckAvailability.getValue())) {
+					return ProtocolMessages.CheckAvailability;
+				}
+				if (obj.get(ProtocolMessages.Request.getValue()).equals(
+						ProtocolMessages.Results.getValue())) {
+					return ProtocolMessages.Results;
+				}
+				if (obj.get(ProtocolMessages.Request.getValue()).equals(
+						ProtocolMessages.StopGame.getValue())) {
+					return ProtocolMessages.StopGame;
+				}
+				break;
 			default:
 				return null;
 

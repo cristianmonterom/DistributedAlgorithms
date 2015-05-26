@@ -95,24 +95,36 @@ public class ClientThread implements Runnable {
 				e.printStackTrace();
 			}
 			receiveResultsResponse();
-
-			System.out.println("asdfasdfasdfasdf");
-			sendStopgameRequest();
-			receiveStopGameResponse();
+//			try {
+//				Thread.sleep(1000000);
+//			} catch (InterruptedException e) {
+//				// TODO Auto-generated catch block
+//				e.printStackTrace();
+//			}
+//			System.out.println("asdfasdfasdfasdf");
+//			sendStopgameRequest();
+//			receiveStopGameResponse();
 			
+		} else {
+			try {
+				sendResultsRequest();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			receiveResultsResponse();			
 		}
 		
 
 
-		out.close();
-		try {
-			in.close();
-//			socketRef.close();
-		} catch (IOException ex) {
-			ex.printStackTrace();
-		}
+//		out.close();
+//		try {
+//			in.close();
+//////			socketRef.close();
+//		} catch (IOException ex) {
+//			ex.printStackTrace();
+//		}
 
-		System.exit(-1);
+//		System.exit(-1);
 	}
 	
 	private void receivePlayResponse() {
