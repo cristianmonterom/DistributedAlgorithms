@@ -38,7 +38,7 @@ public class ResultsRequest extends RequestResponse {
 		JSONObject obj = null;
 		try {
 			obj = (JSONObject) parser.parse(_response);
-			this.setPlayer(obj.get("player").toString());
+//			this.setPlayer(obj.get("player").toString());
 		} catch (org.json.simple.parser.ParseException e) {
 			System.err.println("ResultsRequest: Message is not valid");
 		}	

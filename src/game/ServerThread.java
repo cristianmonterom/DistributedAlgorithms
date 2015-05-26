@@ -40,7 +40,7 @@ public class ServerThread implements Runnable {
 	private BufferedReader in;
 	private boolean debug;
 	private boolean busy;
-	private Game newGame;
+	private static Game newGame;
 	private static States processState = States.StandBy;
 	private int counterPlays = 0;
 	private String player;
@@ -114,12 +114,12 @@ public class ServerThread implements Runnable {
 						break;
 					case Play:
 						PlayRequest pr = receivePlayRequest(strFromServer);
-						if (!this.newGame.getBagItems().isEmpty()){
-//							if (this.counterPlays < this.newGame.getNumPlayers()){
-							String message = this.newGame.validTurn(pr.getToken()) ? "" : "Incorrect Token";
+						if (!newGame.getBagItems().isEmpty()){
+//							if (this.counterPlays < newGame.getNumPlayers()){
+							String message = ""; //newGame.validTurn(pr.getToken()) ? "" : "Incorrect Token";
 							JSONArray items = pr.getItems();
 							JSONParser parser = new JSONParser();
-							this.newGame.addPlayer(pr.getPlayer());
+							newGame.addPlayer(pr.getPlayer());
 							for (int i = 0; i< items.size(); i++){
 								JSONObject obj = (JSONObject) parser.parse(items.get(i).toString());
 								ItemType newItemType = ItemType.getByName(obj.get("item").toString());
@@ -130,12 +130,12 @@ public class ServerThread implements Runnable {
 									amount = 1;
 								}
 								Item newItem = new Item(newItemType, amount);
-								this.newGame.takenItem(newItemType);
-								this.newGame.addPlayerItem(pr.getPlayer(), newItem);
+								newGame.takenItem(newItemType);
+								newGame.addPlayerItem(pr.getPlayer(), newItem);
 							}
-							sendPlayResponse(this.newGame.getBagItems().getItemJsonArray(), message);
+							sendPlayResponse(newGame.getBagItems().getItemJsonArray(), message);
 						} else {
-//						if (this.counterPlays == this.newGame.getNumPlayers()) {
+//						if (this.counterPlays == newGame.getNumPlayers()) {
 							sendResultsResponse();
 							this.processState = States.GameOver;
 						}
@@ -147,7 +147,7 @@ public class ServerThread implements Runnable {
 						break;
 					case Bag:
 						receiveBagRequest(strFromServer);
-						sendBagResponse(this.newGame.getBagItems());
+						sendBagResponse(newGame.getBagItems());
 						break;
 					default:
 						printDebugLines("Invalid message type in state: " + this.processState);
@@ -179,6 +179,7 @@ public class ServerThread implements Runnable {
 
 			} catch (Exception e) {
 //				String error = e.getMessage();
+				e.printStackTrace();
 				 printDebugLines(e.getStackTrace().toString());
 			}
 		}
@@ -188,16 +189,16 @@ public class ServerThread implements Runnable {
 		try {
 			ResultsRequest resultsRequest = new ResultsRequest();
 			resultsRequest.FromJSON(strFromServer);
-			this.player = resultsRequest.getPlayer();
+//			this.player = resultsRequest.getPlayer();
 			printDebugLines(resultsRequest.ToJSON());
 		} catch (Exception e) {
 		}
 	}
 
 	private void sendResultsResponse() {
-//		Player p = this.newGame.getWinner();
+//		Player p = newGame.getWinner();
 //		String sPlayer = p == null ? "" : p.getName(); 
-		ResultsResponse response = new ResultsResponse(this.newGame.getPlayerResultsArray());
+		ResultsResponse response = new ResultsResponse(newGame.getPlayerResultsArray());
 		out.println(response.ToJSON());
 		printDebugLines(response.ToJSON());
 	}
@@ -247,7 +248,7 @@ public class ServerThread implements Runnable {
 
 	private PlayRequest receivePlayRequest(String strFromServer) {
 		try {
-			PlayRequest playRequest = new PlayRequest(this.newGame.getToken().getTokenSession(), "");
+			PlayRequest playRequest = new PlayRequest("", "");//new PlayRequest(newGame.getToken().getTokenSession(), "");
 			playRequest.FromJSON(strFromServer);
 			printDebugLines(playRequest.ToJSON());
 			this.counterPlays++;
@@ -258,7 +259,7 @@ public class ServerThread implements Runnable {
 	}
 	private void sendCheckAvailabilityResponse() throws IOException {
 		try {
-			this.busy = this.newGame.isNull() ? false : true;			
+			this.busy = newGame.isNull() ? false : true;			
 		} catch (Exception e) {
 			this.busy = false;
 		}

@@ -42,7 +42,7 @@ public class PlayRequest extends RequestResponse {
 		JSONObject obj = null;
 		try {
 			obj = (JSONObject) parser.parse(_response);
-			this.setToken(obj.get("token").toString());
+			//this.setToken(obj.get("token").toString());
 			this.setPlayer(obj.get("player").toString());
 			this.setItems((JSONArray) obj.get("items"));
 		} catch (org.json.simple.parser.ParseException e) {

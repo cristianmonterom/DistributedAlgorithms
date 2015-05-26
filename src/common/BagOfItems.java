@@ -19,7 +19,7 @@ public class BagOfItems {
 
 	private void generateInitialBag(int numPlayers){
 		int numExistingItems = ItemType.values().length;
-		int maxItems = (numExistingItems / 2) * numPlayers;
+//		int maxItems = (numExistingItems / 2) * numPlayers;
 		
 		// add one of each item at the beginning
 		for (int i = 0; i < numExistingItems; i++){
@@ -27,12 +27,12 @@ public class BagOfItems {
 		}
 		
 		// add items at random until maxitems is reached
-		maxItems -= numExistingItems;
-		int index = 0;
-		for (int i = maxItems; i > 0; i--){
-			index = randInt(0, items.size() - 1);
-			items.get(index).addAmount();
-		}
+//		maxItems -= numExistingItems;
+//		int index = 0;
+//		for (int i = maxItems; i > 0; i--){
+//			index = randInt(0, items.size() - 1);
+//			items.get(index).addAmount();
+//		}
 	}
 	
 	@SuppressWarnings("unchecked")
