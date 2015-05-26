@@ -115,6 +115,10 @@ public class RequestResponseFactory {
 					return ProtocolMessages.CheckAvailability;
 				}
 				if (obj.get(ProtocolMessages.Request.getValue()).equals(
+						ProtocolMessages.Bag.getValue())) {
+					return ProtocolMessages.Bag;
+				}
+				if (obj.get(ProtocolMessages.Request.getValue()).equals(
 						ProtocolMessages.Results.getValue())) {
 					return ProtocolMessages.Results;
 				}

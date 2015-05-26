@@ -165,6 +165,10 @@ public class ServerThread implements Runnable {
 						receiveCheckAvailabilityRequest(strFromServer);
 						sendCheckAvailabilityResponse();
 						break;
+					case Bag:
+						receiveBagRequest(strFromServer);
+						sendBagResponse(newGame.getBagItems());
+						break;
 					case Results:
 						receiveResultsRequest(strFromServer);
 						sendResultsResponse();
