@@ -48,4 +48,5 @@ public class Player {
 		obj.put("score", getScore());
 		return obj;
 	}
+		
 }

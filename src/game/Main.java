@@ -3,6 +3,8 @@ package game;
 import java.net.Socket;
 import java.util.ArrayList;
 
+import common.Game;
+
 import messaging.StatusResponse;
 
 public class Main {
@@ -41,7 +43,6 @@ public class Main {
 			ServerConnection connAsServer = new ServerConnection(
 					getServerPort());
 			while (true){
-//				System.out.println("init asdfadfadsadsf");
 				connAsServer.establishConnection();
 				ServerThread sThread = new ServerThread(connAsServer.socket);
 				sThread.setDebug(debug);

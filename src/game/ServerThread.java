@@ -87,7 +87,7 @@ public class ServerThread implements Runnable {
 						break;
 					case StartGame:
 						int players = receiveStartGameRequest(strFromServer);
-						newGame = new Game(players);
+						newGame = Game.getInstance(players);
 						sendStartGameResponse(newGame.getToken(),
 								newGame.getBagItems());
 						this.processState = States.GameStarted;
@@ -190,7 +190,7 @@ public class ServerThread implements Runnable {
 	private void sendResultsResponse() {
 		Player p = this.newGame.getWinner();
 		String sPlayer = p == null ? "" : p.getName(); 
-		ResultsResponse response = new ResultsResponse(this.newGame.getBagOfZombies().getZombieJsonArray(), sPlayer, this.newGame.getBagOfZombies().getZombiesScore());
+		ResultsResponse response = new ResultsResponse(this.newGame.getPlayerResultsArray());
 		out.println(response.ToJSON());
 		printDebugLines(response.ToJSON());
 	}

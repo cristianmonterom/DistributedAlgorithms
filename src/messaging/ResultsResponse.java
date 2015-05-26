@@ -7,14 +7,15 @@ import common.ProtocolMessages;
 
 public class ResultsResponse extends RequestResponse {
 	
-	private String winner;
-	private JSONArray zombies;
-	private int deadZombies;
+//	private String winner;
+//	private JSONArray zombies;
+//	private int deadZombies;
+	private JSONArray players;
 	
-	public ResultsResponse(JSONArray zombies, String winner, int deadZombies) {
-		this.zombies = zombies;
-		this.winner = winner;
-		this.deadZombies = deadZombies;
+	public ResultsResponse(JSONArray players) {
+//		this.zombies = zombies;
+//		this.winner = winner;
+		this.players = players;
 	}
 
 	public ResultsResponse(){
@@ -36,9 +37,9 @@ public class ResultsResponse extends RequestResponse {
 	public String ToJSON() {
 		JSONObject obj = new JSONObject();
 		obj.put(Type(), Action());
-		obj.put("zombies", zombies);
-		obj.put("player", winner);
-		obj.put("deadZombies", this.deadZombies);
+		obj.put("players", players);
+//		obj.put("players", winner);
+//		obj.put("deadZombies", this.deadZombies);
 		return obj.toJSONString();
 	}
 
@@ -47,23 +48,20 @@ public class ResultsResponse extends RequestResponse {
 		JSONObject obj = null;
 		try {
 			obj = (JSONObject) parser.parse(_response);
-			this.setzombies((JSONArray) obj.get("zombies"));
-			try {
-				this.winner = obj.get("winner").toString();				
-			} catch (Exception e) {
-				this.winner = "";
-			}
-			this.deadZombies = Integer.parseInt(obj.get("deadZombies").toString());
+			this.setPlayers((JSONArray) obj.get("players"));
+//			try {
+//				this.winner = obj.get("winner").toString();				
+//			} catch (Exception e) {
+//				this.winner = "";
+//			}
+//			this.deadZombies = Integer.parseInt(obj.get("deadZombies").toString());
 		} catch (org.json.simple.parser.ParseException e) {
 			System.err.println("ResultsResponse: Message is not valid");
 		}	
 	}
-	
-	public void setzombies(JSONArray zombies){
-		this.zombies = zombies;
+
+	public void setPlayers(JSONArray players){
+		this.players = players;
 	}
 	
-	public void setWinner(String winner){
-		this.winner = winner;
-	}
 }

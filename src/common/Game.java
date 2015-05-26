@@ -2,18 +2,31 @@ package common;
 
 import java.util.List;
 
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+
 public class Game {
+	
+	private static Game instance = null;
+	
 	private int numPlayers;
 	private BagOfItems bagItems;
 	private BagOfZombies bagZombies;
 	private Token token;
 	private List<Player> players;
-	
-	public Game(int numplayers){
+		
+	protected Game(int numplayers){
 		this.numPlayers = numplayers;
 		bagItems = new BagOfItems(numPlayers);
 		bagZombies = new BagOfZombies(numplayers * 2);
 		token = new Token();
+	}
+	
+	public static Game getInstance(int numPlayers){
+		if (instance == null) {
+			instance = new Game(numPlayers);
+		}
+		return instance;
 	}
 	
 	public BagOfItems getBagItems(){
@@ -79,4 +92,22 @@ public class Game {
 	public BagOfZombies getBagOfZombies(){
 		return this.bagZombies;
 	}
+	
+	@SuppressWarnings("unchecked")
+	public JSONArray getPlayerResultsArray(){
+		JSONArray jsonArray = new JSONArray();
+		for (int i = 0; i < this.players.size(); i++)
+	    {
+	      JSONObject formDetailsJson = new JSONObject();
+	      formDetailsJson.put("player", this.players.get(i).getName());
+	      boolean live = false;
+	      if (this.bagZombies.getZombiesScore() < this.players.get(i).getScore()) {
+	    	  live = true;
+	      }
+	      formDetailsJson.put("live", String.valueOf(live));
+	      jsonArray.add(formDetailsJson);
+	    }
+		return jsonArray;
+	}
+	
 }
