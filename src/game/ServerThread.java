@@ -41,15 +41,15 @@ public class ServerThread implements Runnable {
 	private boolean debug;
 	private boolean busy;
 	private Game newGame;
-	private States processState;
+	private static States processState = States.StandBy;
 	private int counterPlays = 0;
 	private String player;
 
-	private static ServerThread instance = null;
+//	private static ServerThread instance = null;
 	
 	protected ServerThread(Socket socket) {
 //		public ServerThread(Socket socket, States pState) {
-		processState = States.StandBy;
+//		processState = States.StandBy;
 
 		try {
 			inputStream = socket.getInputStream();
@@ -61,12 +61,12 @@ public class ServerThread implements Runnable {
 		in = new BufferedReader(new InputStreamReader(inputStream));
 	}
 
-	public static ServerThread getInstance(Socket socket){
-		if (instance == null) {
-			instance = new ServerThread(socket);
-		}
-		return instance;
-	}
+//	public static ServerThread getInstance(Socket socket){
+//		if (instance == null) {
+//			instance = new ServerThread(socket);
+//		}
+//		return instance;
+//	}
 	
 	@Override
 	public void run() {
